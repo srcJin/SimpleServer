@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "echo 'Hello World'"
+    "start": "nodemon --ignore sessions index.js",
+    "migrate": "node node_modules/db-migrate/bin/db-migrate"
   },
   "repository": {
     "type": "git",
@@ -18,9 +19,20 @@
   },
   "homepage": "https://github.com/kunxin-chor/mysql-base#readme",
   "dependencies": {
+    "bookshelf": "^1.2.0",
+    "db-migrate": "^0.11.13",
+    "db-migrate-mysql": "^2.2.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "forms": "^1.3.2",
     "hbs": "^4.2.0",
+    "knex": "^0.21.21",
+    "mysql": "^2.18.1",
+    "session-file-store": "^1.5.0",
     "wax-on": "^1.2.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }

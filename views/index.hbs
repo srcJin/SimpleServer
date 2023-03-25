@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head><title>Awesome Server</title></head>
+  <body>
+    <h1>Awesome Server Homepage</h1>
+
+    <div>
+      {{#if name}}
+        <p>Hello {{name}}, press here to <a href="/logout">logout</a></p>
+      {{else}}
+        <p>Hello, please <a href="/login">login</a></p>
+      {{/if}}
+    </div>
+  </body>
+</html>
