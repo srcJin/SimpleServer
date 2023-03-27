@@ -26,8 +26,10 @@ App.use(session({
     saveUninitialized: false,
 }));
 
+// Register Flash middleware
 App.use(function (req,res,next) {
   console.log(req.method, req.path);
+  res.locals.errors = req.flash("errors");
   next();
 });
 

@@ -53,6 +53,7 @@ router.post("/login", async (req, res) => {
     res.redirect("/");
     return;
   }
+  // so here errors is the name of where flash store the messages
   req.flash('errors','Wrong credentials')
   res.redirect("/login");
 });
