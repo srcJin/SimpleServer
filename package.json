@@ -20,6 +20,7 @@
   "homepage": "https://github.com/kunxin-chor/mysql-base#readme",
   "dependencies": {
     "bookshelf": "^1.2.0",
+    "connect-flash": "^0.1.1",
     "db-migrate": "^0.11.13",
     "db-migrate-mysql": "^2.2.0",
     "dotenv": "^16.0.3",
