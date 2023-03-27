@@ -6,6 +6,12 @@
       {{{form}}}
 
       <div>
+        <div>
+          {{#each errors}}
+          <p>{{this}}</p>
+          {{/each}}
+        </div>
+
         <input type="submit" value="Login"/>
       </div>
     </form>

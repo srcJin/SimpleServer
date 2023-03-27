@@ -25,6 +25,7 @@ router.get("/login", (req, res) => {
 
   res.render("login", {
     form: loginForm.toHTML(),
+    errors:errors,
   });
 });
 
