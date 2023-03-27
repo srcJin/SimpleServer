@@ -11,7 +11,7 @@ const flash = require('connect-flash')
 const App = express();
 
 App.set('view engine', 'hbs');
-App.use(flash)
+App.use(flash())
 
 App.use(
   express.urlencoded({
@@ -29,6 +29,8 @@ App.use(session({
 // Register Flash middleware
 App.use(function (req,res,next) {
   console.log(req.method, req.path);
+
+  // res.locals is object to be used by  hbs, template engine
   res.locals.errors = req.flash("errors");
   next();
 });

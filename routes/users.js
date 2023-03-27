@@ -23,10 +23,12 @@ router.get("/login", (req, res) => {
     return;
   }
 
-  res.render("login", {
-    form: loginForm.toHTML(),
-    errors:errors,
-  });
+  // res.render("login", {
+  //   form: loginForm.toHTML(),
+  //   // errors:errors,
+  // });
+  res.locals.form = loginForm.toHTML();
+  res.render('login')
 });
 
 router.get("/account", checkAuth, (req, res) => {

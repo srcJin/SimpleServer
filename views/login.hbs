@@ -7,9 +7,13 @@
 
       <div>
         <div>
+          <ul>
+            {{!-- loading the res.local.errors --}}
           {{#each errors}}
           <p>{{this}}</p>
           {{/each}}
+          </ul>
+          </div>
         </div>
 
         <input type="submit" value="Login"/>
