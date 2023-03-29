@@ -18,4 +18,7 @@ module.exports = forms.create({
       validators.matchField('password'),
     ],
   }),
+  'image_url': fields.string({
+    widget: forms.widgets.hidden()
+  })
 });

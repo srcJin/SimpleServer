@@ -69,6 +69,7 @@ router.post('/register', (req, res) => {
       let user = new User({
         username: newForm.data.username,
         password: hash(newForm.data.password),
+        image_url: newForm.data.image_url,
       });
       await user.save(null, {method: 'insert'});
 
@@ -95,6 +96,9 @@ router.get('/register', (req, res) => {
   
   res.render('register', {
     form: registerForm.toHTML(),
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+    uploadPreset: process.env.CLOUDINARY_UPLOAD_PRESET,
+    apiKey: process.env.CLOUDINARY_API_KEY,
   })
 })
 
