@@ -10,7 +10,7 @@ router.get('/transfer', checkAuth, (req, res) => {
 })
 
 router.post('/transfer', checkAuth, (req, res) => {
-  res.send("OK");
+  res.send(`Successfully transferred $${req.body.amount} to ${req.body.recipient}`);
 });
 
 

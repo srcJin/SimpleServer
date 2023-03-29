@@ -7,7 +7,7 @@ module.exports = forms.create({
     label: 'Recipient',
     required: true,
   }),
-  'Amount': fields.number({
+  'amount': fields.number({
     label: 'Amount',
     required: true,
   }),
