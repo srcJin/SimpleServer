@@ -29,9 +29,7 @@ const App = express();
 const csrfProtection = csurf();
 
 App.set('view engine', 'hbs');
-
 App.use(flash());
-
 App.use(
   express.urlencoded({
     extended: false

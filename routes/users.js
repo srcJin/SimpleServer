@@ -1,109 +1,103 @@
-const express = require('express');
-const loginForm = require('../forms/login');
-const registerForm = require('../forms/register');
-const checkAuth = require('../middlewares/checkAuth');
-const User = require('../models/user');
-const hash = require('../utils/hash');
+const express = require("express");
+const loginForm = require("../forms/login");
+const registerForm = require("../forms/register");
+const checkAuth = require("../middlewares/checkAuth");
+const Users = require("../dal/users");
+const hash = require("../utils/hash");
 const router = express.Router();
 
-router.get('/', (req,res) => {
-  let name = '';
+router.get("/", (req, res) => {
+  /** Name of user */
+  let name = "";
   if (req.session.user) {
     name = req.session.user.name;
   }
-  res.render('index', {
+  res.render("index", {
     name: name,
   });
 });
 
-router.get('/login', (req, res) => {
+router.get("/login", (req, res) => {
   if (req.session.user) {
-    res.redirect('/');
+    res.redirect("/");
     return;
   }
-  
-  res.render('login', {
+
+  res.render("login", {
     form: loginForm.toHTML(),
   });
 });
 
-router.get('/account', checkAuth, (req, res) => {
-  res.status(200).send("GOOD JOB");
-})
+router.post("/login", async (req, res) => {
+  const { username, password } = req.body;
 
-router.post('/login', async (req, res) => {
-  const {username, password} = req.body;
-  let foundUser = null;
-  try {
-    foundUser = await User.collection()
-      .where({username: username}).fetchOne();
-  }catch {
-    console.error("Cannot find user", username);
-  }
-
-  if (foundUser && foundUser.attributes.password === hash(password)) {
-    // Login the user
-    req.session.user = {
-      name: foundUser.attributes.username,
-    }
-    res.redirect('/');
+  const user = await Users.verifyUser(username, password);
+  if (!user) {
+    req.flash("errors", "Wrong credentials");
+    res.redirect("/login");
     return;
   }
-  
-  req.flash('errors', 'Wrong credentials');
-  res.redirect('/login');
-})
 
-router.post('/register', (req, res) => {
+  req.session.user = {
+    name: user.attributes.username,
+  };
+  res.redirect("/");
+});
+
+router.post("/register", (req, res) => {
   registerForm.handle(req, {
     success: async (newForm) => {
-      let users = await User.collection()
-        .where({username: newForm.data.username}).fetch();
-      if (users.length > 0) {
-        req.flash('errors', `Username ${newForm.data.username} already exists`);
+      try {
+        await Users.create(
+          newForm.data.username,
+          newForm.data.password,
+          newForm.data.image_url
+        );
+      } catch (err) {
+        if (err.code === "ER_DUP_ENTRY") {
+          req.flash(
+            "errors",
+            `Username ${newForm.data.username} already exists`
+          );
+          res.redirect("/register");
+          return;
+        }
 
-        res.redirect('/register');
+        req.flash("errors", `Got error while creating user: ${err.code}`);
+        res.redirect("/register");
         return;
       }
-      
-      let user = new User({
-        username: newForm.data.username,
-        password: hash(newForm.data.password),
-        image_url: newForm.data.image_url,
-      });
-      await user.save(null, {method: 'insert'});
-
-      res.redirect('/login');
+      res.redirect("/login");
     },
     error: (newForm) => {
-      res.render('register', {
+      res.render("register", {
         form: newForm.toHTML(),
-      })
+      });
     },
     empty: (newForm) => {
-      res.render('register', {
+      res.render("register", {
         form: newForm.toHTML(),
-      })
-    }
-  })
-})
+      });
+    },
+  });
+});
 
-router.get('/register', (req, res) => {
+router.get("/register", (req, res) => {
   if (req.session.user) {
-    res.redirect('/');
+    res.redirect("/");
     return;
   }
-  
-  res.render('register', {
+
+  res.render("register", {
     form: registerForm.toHTML(),
     cloudName: process.env.CLOUDINARY_CLOUD_NAME,
     uploadPreset: process.env.CLOUDINARY_UPLOAD_PRESET,
     apiKey: process.env.CLOUDINARY_API_KEY,
-  })
-})
+  });
+});
 
-router.get('/logout', (req, res) => {
+router.get("/logout", (req, res) => {
   req.session.user = null;
-  res.redirect('/');
-})
+  res.redirect("/");
+});
 module.exports = router;
