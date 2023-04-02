@@ -1,24 +1,27 @@
 const express = require("express");
 const transferForm = require("../forms/transfer");
 const checkAuth = require("../middlewares/checkAuth");
-const Transactions = require("../dal/transactions");
+const TransactionsService = require("../services/transactions");
 const router = express.Router();
 
-router.get("/transfer", checkAuth, (req, res) => {
-  res.render("transfer", {
+router.use(checkAuth);
+
+router.get("/transfer", (req, res) => {
+  res.render("bank/transfer", {
     form: transferForm.toHTML(),
   });
 });
 
-router.post("/transfer", checkAuth, (req, res) => {
+router.post("/transfer", (req, res) => {
   transferForm.handle(req, {
     success: async (newForm) => {
       const { amount, recipient } = newForm.data;
 
-      const txn = await Transactions.create(recipient, amount);
+      const svc = new TransactionsService(req.session.user.name);
+      const txn = await svc.transferTo(recipient, amount);
 
-      res.render("receipt", {
-        transaction: txn.toJSON(),
+      res.render("bank/receipt", {
+        transaction: txn,
       });
     },
     error: (newForm) => {
@@ -31,6 +34,15 @@ router.post("/transfer", checkAuth, (req, res) => {
         form: newForm.toHTML(),
       });
     },
+  });
+});
+
+router.get("/transactions", async (req, res) => {
+  const svc = new TransactionsService(req.session.user.name);
+  const txns = await svc.listTransactions();
+
+  res.render("bank/transactions", {
+    transactions: txns,
   });
 });
 

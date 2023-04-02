@@ -19,14 +19,29 @@ exports.up = async function (db) {
     id: { type: "int", primaryKey: true, autoIncrement: true },
     amount: { type: "int", notNull: true },
     recipient: "string",
+    sender: "string",
+    created_at: "bigint", // to support 64-bit integers
   });
 
   await db.addForeignKey(
     "transactions",
     "users",
-    "transactions_user_fk",
+    "transactions_user_recipient_fk",
     {
       recipient: "username",
+    },
+    {
+      onDelete: "CASCADE",
+      onUpdate: "RESTRICT",
+    }
+  );
+
+  await db.addForeignKey(
+    "transactions",
+    "users",
+    "transactions_user_sender_fk",
+    {
+      sender: "username",
     },
     {
       onDelete: "CASCADE",
