@@ -8,6 +8,8 @@ const csurf = require('csurf');
 const cloudinary = require('cloudinary').v2;
 var FileStore = require('session-file-store')(session);
 
+const {TransactionStatus} = require('./utils/constants');
+
 const userRoutes = require('./routes/users');
 const bankRoutes = require('./routes/bank');
 const uploadRoutes = require('./routes/upload');
@@ -23,6 +25,16 @@ hbs.handlebars.registerPartial(
   "csrf",
   "<input type=\"hidden\" value=\"{{token}}\" name=\"_csrf\" />"
 );
+
+// to convert 0/1 into message
+hbs.handlebars.registerHelper('txn_status', function (num) {
+  TransactionStatus["Success"]
+  const reverseStatus = {
+    0: "Failure",
+    1: "Success",
+  };
+  return reverseStatus[num];
+});
 
 const App = express();
 

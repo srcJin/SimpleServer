@@ -9,8 +9,10 @@
           <tr>
             <th>Description</th>
             <th>Time</th>
+            <th>Status</th>
             <th>Credit</th>
             <th>Debit</th>
+            
           </tr>
         </thead>
         <tbody>
@@ -18,9 +20,11 @@
             <tr>
               <td>{{this.description}}</td>
               <td>{{this.time}}</td>
+              {{!-- this is a function call for register Helper: txn_status in index.js --}}
+              <td>{{txn_status this.status}}</td> 
               <td>{{this.credit}}</td>
               <td>{{this.debit}}</td>
-            </tr>
+            </ tr>
           {{/each}}
         </tbody>
       </table>

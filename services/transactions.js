@@ -17,7 +17,7 @@ class TransactionsService {
     const txns = await Transactions.listByUsername(this.username);
     const txnList = txns.toJSON();
 
-    return txnList.map((t) => {
+    return txnList.map((t) => { // t = one transaction, t comes from txnList
       let debit = 0,
         credit = 0,
         description = "";
@@ -34,6 +34,7 @@ class TransactionsService {
         credit: credit,
         time: new Date(t.created_at).toDateString(),
         description: description,
+        status: t.status,
       };
     });
   }
